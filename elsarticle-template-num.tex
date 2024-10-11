@@ -1,0 +1,379 @@
+%% 
+%% Copyright 2007-2020 Elsevier Ltd
+%% 
+%% This file is part of the 'Elsarticle Bundle'.
+%% ---------------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'Elsarticle Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+
+%% Template article for Elsevier's document class `elsarticle'
+%% with numbered style bibliographic references
+%% SP 2008/03/01
+%%
+%% 
+%%
+%% $Id: elsarticle-template-num.tex 190 2020-11-23 11:12:32Z rishi $
+%%
+%%
+\documentclass[preprint,12pt]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%% \documentclass[authoryear,preprint,review,12pt]{elsarticle}
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%% \documentclass[final,1p,times]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn]{elsarticle}
+%% \documentclass[final,3p,times]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn]{elsarticle}
+%% \documentclass[final,5p,times]{elsarticle}
+%% \documentclass[final,5p,times,twocolumn]{elsarticle}
+
+%% For including figures, graphicx.sty has been loaded in
+%% elsarticle.cls. If you prefer to use the old commands
+%% please give \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{subcaption}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers.
+%% \usepackage{lineno}
+
+\journal{Submitted to Chemometrics and Intelligent Laboratory Systems}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Title, authors and addresses
+
+%% use the tnoteref command within \title for footnotes;
+%% use the tnotetext command for theassociated footnote;
+%% use the fnref command within \author or \address for footnotes;
+%% use the fntext command for theassociated footnote;
+%% use the corref command within \author for corresponding author footnotes;
+%% use the cortext command for theassociated footnote;
+%% use the ead command for the email address,
+%% and the form \ead[url] for the home page:
+%% \title{Title\tnoteref{label1}}
+%% \tnotetext[label1]{}
+%% \author{Name\corref{cor1}\fnref{label2}}
+%% \ead{email address}
+%% \ead[url]{home page}
+%% \fntext[label2]{}
+%% \cortext[cor1]{}
+%% \affiliation{organization={},
+%%             addressline={},
+%%             city={},
+%%             postcode={},
+%%             state={},
+%%             country={}}
+%% \fntext[label3]{}
+
+\title{An alignment-agnostic methodology for the analysis of designed separations data}
+
+%% use optional labels to link authors explicitly to addresses:
+%% \author[label1,label2]{}
+%% \affiliation[label1]{organization={},
+%%             addressline={},
+%%             city={},
+%%             postcode={},
+%%             state={},
+%%             country={}}
+%%
+%% \affiliation[label2]{organization={},
+%%             addressline={},
+%%             city={},
+%%             postcode={},
+%%             state={},
+%%             country={}}
+
+\author{Michael Sorochan Armstrong}
+\author{Jos\'e Camacho}
+\address{Computational Data Science (CoDaS) Lab, Department of Signal Theory, Networks and Communication - University of Granada,%Department and Organization
+            %C/ Periodista Daniel Saucedo Aranda S/N CP:18071 Granada (Granada)
+            C/ Periodista Daniel Saucedo Aranda, 
+            Granada,
+            18071, 
+            Andalusia,
+            Spain}
+\begin{abstract}
+%% Text of abstract
+Chemical separations data are typically analysed in the time domain using methods that integrate the discrete elution bands. Integrating the same chemical components across several samples must account for retention time drift over the course of an entire experiment as the physical characteristics of the separation are altered through several cycles of use. Failure to consistently integrate the components within a matrix of $M \times N$ samples and variables create artifacts that have a profound effect on the analysis and interpretation of the data. This work presents an alternative where the raw separations data are analysed in the frequency domain to account for the relative offset of each of the chemical components as an experimental matrix of complex Fourier coefficients. The results of an ANOVA-Simultaneous Component Analysis (ASCA) are compared using the peak table, and frequency domain representation of an designed experimental dataset. 
+\end{abstract}
+
+%%Graphical abstract
+\begin{graphicalabstract}
+\includegraphics{grabs}
+\end{graphicalabstract}
+
+%%Research highlights
+\begin{highlights}
+\item Raw GC-FID from a designed experimental dataset is analysed using ANOVA-Simultaneous Component Analysis (ASCA) following pre-processing using a Fast Fourier Transform (FFT).
+\item The results of the FFT-ASCA analysis are largely consistent with the analysis using the peak table data. This is confirmed using a demonstration with synthetic data.
+\end{highlights}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+ANOVA \sep ASCA \sep chromatographic data
+
+\end{keyword}
+
+\end{frontmatter}
+
+%% \linenumbers
+
+%% main text
+\section{Introduction}
+\label{sec:sample1}
+\subsection{Challenges with peak table analysis}
+Chromatographic separations enable detailed chemical analyses of complex mixtures, providing valuable information for complex research questions. For a multivariate analysis, several samples are collected and discrete chemical bands are integrated within time intervals whose apices are recorded as ``retention times'' - a descriptor of a chemical feature based on the elapsed time between injection and detection of the compound. This is typically done separately for each sample, and even when considered separately some issues arise when the signal for each chemical feature is close to the baseline noise, or convolved with other closely-eluting chemical features. Within the multivariate context these challenges do become more significant since a faithful representation of the chemical information must account for the fact that the same chemical features may drift between analytical runs, a phenomenon often referred to as ``peak drift''~\cite{christensen2005chromatographic}. Failure to integrate the same chemical features, or chromatographic peaks in the same column in an $M \times N$ matrix of experimental information (i.e., the ``peak table'') introduces artifacts that affect the resulting inferences from the the analysis, since a peak may be falsely indicated as being distinct from similar chemical features in other samples (a false negative), or incorrectly associated with a chemical feature it is actually different from (similar to a false positive). In the former case, either zeros are introduced to an $n \in \{1...N\}$ column which is easy to notice from an inspection of the data, or possibly summed together with an unrelated feature which is much harder to identify. Both instances break the assumption of bilinearity within the context of a multivariate analysis, since these artifacts make covariance of the data poorly representative of the actual chemical phenomena being investigated \cite{armstrong2023parafac2}.
+
+Although retention information alone is often used to integrate univariate chromatographic separations data samples, such as those from Gas Chromatography - Flame Induction Detection (GC-FID) experiments, hyphenated methods that connect a multivariate detector in sequence to separation step are often used to improve the identification of each chemical component. This information can not only be used to assist in the interpretation of the data, but also for the alignment of the data, because the detector itself is intrinsically aligned through mass calibration in the case of a mass spectrometer and can be assumed not to vary significantly over the course of an experiment. While the raw data itself is multivariate, the chemical factors themselves still suffer from their tendency to drift and sophisticated methods for integration are still necessary to summarize the information as a peak table. Extensive research has been done into this type of data, owing to the popularity of High Performance Liquid Chromatography - Mass Spectrometry (LC-MS) data for the chemical analysis of bio-fluids in the Omics field. For Gas Chromatography - Mass Spectrometry (GC-MS) data, an elegant approach for analysis can be performed using PARAFAC2 \cite{kiers1999parafac2}, which includes a relaxed constraint for trilinearity across $M \times J \times N$ acquisitions (i.e., measurements (retention times)), mass-to-charge ratios (m/z) and samples (later: replicates in the final peak table) respectively. But even using PARAFAC2 and related methods for linear/multi-linear decompositions cannot completely escape the need for pragmatic pre-processing strategies, since prior to analysis regions of interest (ROIs) and their associated component numbers must also be selected \cite{baccolo2021untargeted,giebelhaus2022untargeted}.
+
+So as not to bias the analysis, strategies for the integration of chromatographic data (or ``pre-processing'' as it is commonly called), must be as unsupervised as possible. But any representation of the data whose ``true'' characteristics are not known \textit{a-priori}, can only be compared with its competitors, and not against a set of facts regarding the data\cite{weggler2021unique}.
+
+%Any strategy introduces a degree of bias to the analysis, as 
+%There also presents a problem where methods for comparing strategies can only be compared with one another, rather than against known facts about the data~.
+
+%This limits the scope of the current study to one set of parameters for the peak table analysis, although a method for accounting for missing data is incorporated into the significance testing step of the different factors to reveal the best possible analysis of the peak table data as it has been presented to the research community.
+
+
+This work suggests that an abstraction of the raw chromatographic data through a frequency domain representation can be used to subvert many common issues with chromatographic data analysis. This is done using the Fast Fourier Transform (FFT) on each sample within a designed experimental dataset collected using a Gas Chromatography Flame-Induction Detector (GC-FID) system followed by subsequent Analysis of Variance (ANOVA) - Simultaneous Component Analysis (ASCA)~\cite{smilde2005anova} that has been generalized to account for complex matrices. This technique recovers similar information to the more traditional peak table representation of the data, as provided by the authors of the original study, but requires an extra step to recover informative representations of the data in the time domain for the sake of interpreting the results. This is a simpler implementation of a method for analysis that is becoming widespread as an intermediate step in many popular algorithms ~\cite{schneide2023shift,schneide2024shift,yu2023parasias}.
+
+% Herein, an abstraction of the raw chromatographic data in the frequency domain is analysed using Analysis of Variance (ANOVA) - Simultaneous Component Analysis (ASCA)~\cite{smilde2005anova} via the Fast Fourier Transform (FFT). This technique is used as an intermediate to solving problems with peak drift~\cite{schneide2023shift,schneide2024shift,yu2023parasias}, but this method analyses the frequency representation directly, and based on the factorization of the different experimental factors the data is interpreted through an inverse transform \textit{post-hoc}.
+
+\subsection{ANOVA-Simultaneous Component Analysis}
+
+The following description of ASCA is summarized as per \cite{camacho2023permutation}. A matrix of experimental observations, $\mathbf{X} (N \times M)$ can be factorized according to its encoded factor matrix, $\mathbf{D} (N \times F)$ according to:
+
+\begin{equation}
+    \mathbf{X} = \mathbf{D} \mathbf{\hat{\Theta}}^T + \mathbf{E}
+\end{equation}
+
+\noindent where $\mathbf{E}$ is an error matrix of the same dimensions as $\mathbf{X}$ that indicates the variance not accounted for by the model $\mathbf{D} \mathbf{\hat{\Theta}}^T$. $\mathbf{\hat{\Theta}}$ is typically calculated through a least-squares analysis commonly referred to as a General Linear Model, which is equivalent to a standard ANOVA or ASCA based on averages \cite{smilde2005anova} when the experimental design is balanced, and provides some robustness against unbalanced experiments when it is not. The significance of each experimental factor, as a subset of the columns in $\mathbf{D}$ is typically performed using permutation testing:
+
+\begin{equation}
+p = \frac{\#\{\pi:F^\pi_{\nu_1,\nu_2} \geq F^{A}_{\nu_1,\nu_2}\} + 1}{\Pi+1}
+\end{equation}
+
+\noindent which for each permutation the calculated F-ratio ($F^\pi_{\nu_1,\nu_2}$) of the permutated data is compared against the nominal F-ratio of the un-permuted data ($F^{A}_{\nu_1,\nu_2}$) in order to simulate an empirical null distribution against which the significance of each experimental factor can be compared. The F-ratios are calculated as a function of the sum of squares (SSQ) of the data reconstructed according to some subset ($\mathbf{D}_A\mathbf{\hat{\Theta}}_A^T$) of $\mathbf{D}\mathbf{\hat{\Theta}}^T$ for an arbitrary factor, $A$:
+
+\begin{equation}
+    \mathbf{X}_A = \mathbf{C}_A\mathbf{\hat{\Theta}}^T_A
+\end{equation}
+
+\noindent against the residual matrix $E$\footnote{Note that other F-ratios can be used, in particular in the presence of random/nested effects and interactions \cite{anderson2014permutational}.}, the calculated test statistic $F_A$ for factor $A$ normalized $\nu_1, \nu_2$ degrees of freedom:
+
+ \begin{equation}\label{eq:sig_test}
+    F^A_{\nu_1,\nu_2} = \frac{||\mathbf{X}_A||_F^2/\nu_1}{||\mathbf{E}||^2_F/\nu_2}
+\end{equation}
+
+\noindent where the squared Frobenius norm, denoted as $||\cdot||^2_F$, is used to indicate the sum of squares for the factor and residual matrices. For complex-valued data, the real-valued sum of squares are calculated through the following identity:
+
+\begin{equation}\label{eq:ssq}
+    SS_A = ||\mathbf{X}_A||^2_F = Tr(\mathbf{X}_A\mathbf{X}_A^H)
+\end{equation}
+
+\noindent since the \textit{Hermitian} (i.e. conjugate transpose) of $\mathbf{X}_A$ must be explicit to ensure that a real-valued scalar is returned. Proof of this identity is widely-known, and can be proven by taking the matrix product of any complex number and its complex conjugate.
+
+Altogether these reconstructed matrices are nominally orthogonal in the case of a balanced design, and can be represented as summation of their contributions to the overall matrix of experimental data $X$:
+
+\begin{equation}
+    \mathbf{X} = \mathbf{1}\mu + \mathbf{X}_A + \mathbf{X}_B + \mathbf{X}_{AB} + \mathbf{E}
+\end{equation}
+
+\noindent and the face-splitting product of the columns representing the linear factors themselves (such as $A$ and $B$) can be used to calculate the interactions between the factors $AB$. $\mu$ is the $1\times N$ vector of variable-wise means.
+
+\subsection{Fast Fourier Transforms}
+
+A key characteristic of the pre-processing strategy proposed in this work involves a frequency domain representation of the raw experimental data. In this case this is done using a Fast Fourier Transform (FFT), which is an algorithmic acceleration of the Discrete Fourier Transform representing the time-domain data as a series of complex coefficients, encoding the relative magnitude and offset of a series of sinusoidal components that sum to a least-squares representation of the original data. FFTs can be performed in $L$ modes \cite{smith1995handbook}, which may generalize to multi-modal separations and/or hyphenated data, but for the sake of demonstration only 1-dimensional transforms on univariate data will be considered. Take the 1 dimensional discrete Fourier transform of a univariate time signal, $x_m$ for $m \in \{1...M\}$ acquisitions in the time domain:
+
+\begin{equation}\label{eq:fft}
+    x_k = \sum_{m=0}^{M-1} x_m e^{-i \frac{2\pi}{M} km}\textnormal{, for } k \in \{1...M/2\}
+\end{equation}
+
+\noindent where the right hand side of Equation \ref{eq:fft} transforms the data into $k$ frequencies up to $M/2$, or half the total number of acquisitions. The relationship is linear, and can be inverted:
+
+\begin{equation}\label{eq:ifft}
+    x_m = \frac{1}{M} \sum_{k=0}^{M-1} x_k e^{i \frac{2\pi}{M} kn}
+\end{equation}
+
+Note that the conventions for use of the normalization constant $\frac{1}{M}$ for the forward or inverse transforms vary by definition, since for equi-spaced data the transform is \textit{orthogonal}, but not \textit{orthonormal} to itself \cite{armstrong2023direct}.
+
+In this case, for a series of time-series data representing $N$ chromatographic samples, $x_m$ is indexed row-wise and each are transformed into the frequency domain via Equation \ref{eq:fft}. An ASCA analysis is then performed on the matrix of the complex coefficients - where statistical significance testing is performed on the magnitude of each complex coefficient according to Figure \ref{fig:imag}, and Equation \ref{eq:ssq}.
+
+\begin{figure}[tbh!]
+\centering
+\input{image_paper}
+
+\caption{Calculation of the magnitude of the complex coefficients as the euclidean distance from $0 + 0i$, as it relates to the implicit magnitude of real-valued data ($|n|=a$).}
+\label{fig:imag}
+\end{figure}
+
+Significance testing follows as normally, but the complex characteristics of the data are preserved for the subsequent visualization step, wherein the loadings of the reconstructed matrices for each experimental factor projected the summed reconstruction and error terms to calculate the scores for the ASCA model according to an arbitrary factor $A$:
+%
+\begin{align}\label{eq:asca}
+    \mathbf{T}_A\mathbf{P}_A^H = \mathbf{X}_A \\
+    \mathbf{T}^*_A = (\mathbf{X}_A + \mathbf{E})\mathbf{P}_A
+\end{align}
+%
+\noindent where the scores and loadings matrices $\mathbf{T}_A$ and $\mathbf{P}_A$ are respectively $N \times R$, and $M \times R$ complex matrices, with $\mathbf{P}_A^H$ representing the Hermitian of the loadings matrix $\mathbf{P}_A$. In the frequency domain, the loadings $\mathbf{P}_A$ may not be particularly easy to interpret as an abstraction of the original data in the time series. But the loadings can be transformed back into the time domain without sacrificing the least-squares solution to the GLM-like problem as in Equation \ref{eq:GLM}. Consider $\mathbf{X}_m$ as the time-domain representation of a designed experimental dataset with one significant factor, and $\mathbf{X}_k$ as the corresponding frequency domain representation. Equations \ref{eq:fft} and \ref{eq:ifft} can be represented by the $M\times M$ linear transformation $\mathbf{F}$ for the Discrete Fourier Transform (DFT), and $\frac{1}{M}\mathbf{F}^{-H} = \mathbf{F}^{-1}$ for the corresponding inverse scaled by the number of observations, $M$. It follows that:
+
+\begin{align}
+    \mathbf{X}_k = \mathbf{X}_m\mathbf{F}\\
+    \mathbf{X}_m = \mathbf{F}^{-1}\mathbf{X}_k\\
+    \mathbf{X}_k = \mathbf{T}\mathbf{P}^H + \mathbf{E}\\
+    \mathbf{X}_m = \mathbf{F}^{-1}\left(\mathbf{T}\mathbf{P}^H + \mathbf{E}\right)\\
+    \mathbf{X}_m = \mathbf{T}\left(\mathbf{F}^{-1}\mathbf{P}^H\right) + \mathbf{F}^{-1}\mathbf{E}
+\end{align}
+
+And so the transform of the loadings from the frequency domain encompass similar variance as a function of the linear transformation $\mathbf{F}$, and can be interpreted following the inverse transform. Additionally, the reconstructions of $\mathbf{X}$ according to the different experimental factors may be transformed back to the time domain for an inspection of the different peaks responsible for affecting the level separations.
+ 
+\subsection{Experimental Data and Methodology}
+
+Data from a study measuring the changes in chemical profiles of the red flour beetle \textit{Tribolium castaneum}, as a function of immune stimulation. The motivation for the original study \cite{lo2023immune} was to investigate how the insects communicate via chemical signalling in response to environmental stressors. One of the two experimental datasets for this design was used in this example, which analysed stink glad secretions 24h and 72h following the absence of any exposure to environmental stressors, exposure to physical wounding via sterile PBS injection, and exposure to inactive \textit{Bacilius thuringiensis bv. tenebrionis}. Each sample represents the stink gland secretions of one individual, collected through chemical extraction and analysed using GC-FID. In addition to the sex of the individuals being a factor in the design, the order in which the samples were run were considered as an additional experimental variable which is presumed not to be significant. The contributions of each factor to the overall variance in the model is summarized as:
+
+\begin{equation}\label{eq:GLM}
+    \mathbf{X} = \mathbf{T} + \mathbf{R} + \mathbf{S} + \mathbf{O} + \mathbf{E}
+\end{equation}
+
+\noindent which encompasses $\mathbf{T}$, $\mathbf{R}$, $\mathbf{S}$, and $\mathbf{O}$ as the reconstructed matrices for ``Time'', ``Treatment'', ``Sex'', and ``Order'' respectively. 
+
+All experimental data were analyzed using a modified variant of the MEDA Toolbox (to handle complex data) on MATLAB 2024a. The calculations were performed on system running Ubuntu 22.04.4 LTS with an Intel i9-1400K 32 core CPU, two parallel NVIDIA GeForce RTX 4070 GPUs and 128 GB of RAM.
+
+\section{Results and Discussion}
+
+\subsection{GLM factorization and inference}
+
+The results of several ASCA models are shown below in Table \ref{tb:results}. The peak tables provided as part of the original study were mean-centred. The effect of missing values in the peak table data were examined by performing the ASCA analysis on the data with and without a permutational conditional mean replacement strategy for minimizing the effect of missing data on measuring the effect of different experimental factors. In short, for each permutation, the missing values are replaced with the apparent \textit{cell mean} as the shifted data presents relative to the experimental design matrix which is kept constant. All zeros were presumed to be missing values (see discussion).
+
+For each GLM analysis, all binary interacting terms were examined before being ``trimmed'' in a subsequent analysis where only the previously indicated terms were included in the model. Interacting terms whose linear factors were not indicated as significant were not considered.
+
+\begin{table} % It is hard to append tables - if the results are refreshed make sure that the \begin and \end terms are removed. You may have to re-label some things.
+\input{tables/peak_table_zero} \\
+\input{tables/peak_table} \\ 
+\input{tables/freq_table_mn} \\
+
+\caption{Results of GLM analyses of the experimental factors versus the different representations of the multivariate data. Beginning with the un-altered peak table, followed by the zero-handling GLM with permutational conditional mean replacement (pCMR) \cite{pCMR}, and then the mean-centred frequency domain GLM analysis which contains no missing information. P-vaues below 0.05 are shown in bold.}
+\label{tb:results}
+
+\end{table}
+
+From the results of Table \ref{tb:results} it is clear from the apparent significance of the experimental factors, that the presence of zeros has a profound effect on the resulting interpretation of the data. In the peak table representation, failure to account for zeros neglects to demonstrate the significance of the time factor, and suppresses the relative weight of the interacting term. Because the peak table representation relies on an intermediate step to integrate the peaks, it is impossible to know which zeros are truly absent from the data, and which zeros have failed to be integrated by the software. However it is worth noting that a similar treatment in the time and frequency domains yields similar results when the zeros are accounted for by the permutational cell mean replacement routine. To further test the validity of FFT-ASCA, a synthetic dataset whose characteristics were known has been analyzed as well
+
+\subsection{ASCA}
+
+From Equation \ref{eq:asca} the following \textit{post-hoc} visualizations of the data were performed in agreement with significance testing results. The factor ``Time'' was indicated as significant only after correcting for missing values in the peak table data, but this routine does not affect the factorization and visualization by ASCA (only the inference), which does not yield especially interpretable results (see Figure \ref{fig:figure1}). The results of the mean-centred and standardized data (i.e. autoscaled) have the clearest differentiation between the two time measurement points, although this has the consequence of highlight high-frequency variation into the dataset which may not be truly representative of the significant chemical component, which was demonstrated in Table \ref{tb:results} to affect the statistical findings.
+
+
+
+\begin{figure}[hbtp!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/peak_time.eps}
+        \caption{Peak table PCA scores of factor ``Time''.}
+        \label{fig:figure1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/freq_time_mn.eps}
+        \caption{Real-valued PCA scores for factor ``Time'' from FFT transformed data. Mean-centred.}
+        \label{fig:figure2}
+    \end{subfigure}
+    
+    \vfill
+    
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/peak_loads_time.eps}
+        \caption{Loadings for factor "Time" from the peak table representation of the data. 26 targeted metabolites were included in the analysis.}
+        \label{fig:figure3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/freq_loads_time.eps}
+        \caption{Complex-valued loadings in the frequency domain for factor ``Time''.}
+        \label{fig:figure4}
+    \end{subfigure}
+    \vfill
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/time_peaks.eps}
+        \caption{Real-valued loadings in the time domain for factor ``Time''.}
+        \label{fig:figure5}
+    \end{subfigure}
+    \caption{ASCA results for the peak table analysis, as well as the frequency-domain analysis. The real-valued scores in the frequency domain are more consistent, but the loadings themselves are less interpretable. They can however be transformed back into the time domain.}
+    \label{fig:subfigures}
+    
+\end{figure}
+
+In addition to analyzing the loadings, the individual factor matrices themselves can be transformed back into the time domain for  inspection. This type of analysis shows that the GLM performed on the frequency domain, as an abstraction of the original, raw data still corresponds to real-valued chemical components. An example is shown in Figure \ref{fig:freq_treat}, where a single chemical factor with evidence of statistical significance in the frequency domain, is clearly differentiated according to its levels in the time domain.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/time_treat.eps}
+    \caption{Time-domain reconstruction of factor ``Treatment'' where the levels are clearly differentiated.}
+    \label{fig:freq_treat}
+\end{figure}
+
+\subsection{Analysis of a synthetic dataset}
+
+A synthetic GC-FID dataset was made using an approach to simulate multivariate relationships \cite{Camacho2016} for one significant linear factor. The output of this routine was used to inform the amplitude of 5 Gaussian peaks, with an additional 5 whose amplitudes were randomly generated. Across each simulated samples' 5000 acquisitions, the Gaussian peak widths of $4\sigma$ were nominally sampled 20 times, which is typical for such data. Random peak drift, or ``jitter'' on the order of 0 to 50 acquisitions was generated while preserving the relative peak order, and at each instance an parallel GLM analysis was performed on the raw data (time), versus a similar analysis performed following an FFT transformation (frequency). At each level, a randomly generated synthetic dataset was created for $n=10$ and the observed \textit{p}-value was converted to a \textit{z} score and compared against the \textit{z} score known from the synthetic data, assuming a latent normal distribution.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/comparison.pdf}
+    \caption{As shown by the results of this analysis, as the jitter in the data increases, the hypothesis testing step in parGLM analysis using the time-domain data becomes much less sensitive. However, following pre-processing using an FFT analysis the results are much more consistent.}
+    \label{fig:compare}
+\end{figure}
+
+\section{Conclusions}
+
+The utility of Fourier-transformed data as a pre-processing strategy for an ASCA analysis appears to subvert some common problems with pre-processing of chromatographic data. In the experimental dataset, the presence of missing values in the peak table was shown to have a strong effect on the resulting interpretation. A transformation of the raw data itself however to a series of fully-populated Fourier coefficients offers similar insight into the analysis following missing value correction, and for a similar level of interpretability. While simple, this method offers new ways of analyzing chromatographic data, in a manner that relies on fewer meta-parameters for feature engineering and extraction prior to the analysis step. Although this technique has not been definitely proven to out-perform traditional methods for analyzing chromatographic data in all cases, this demonstration is representative of a number of issues faced by laboratory scientists handling and interpreting chromatographic data. GC-FID is not commonly used for metabolomics-type work, but this type of methodology is easily generalized to hyphenated and/or multi-modal separations using similar extensions of multivariate statistics to tensor analysis that have already been widely discussed in literature \cite{koleini2023complementary}. 
+
+\section{Acknowledgements}
+
+This work was supported by the Agencia Estatal de Investigación in Spain, MCIN/AEI/10.13039/501100011033, grant no. PID2020-113462RB-I00. Michael Sorochan Armstrong has received funding from the European Union's Horizon Europe research and innovation programme under the Marie Skłodowska-Curie grant agreement no. 101106986.
+
+%% If you have bibdatabase file and want bibtex to generate the
+%% bibitems, please use
+%%
+ \bibliographystyle{elsarticle-num} 
+ \bibliography{cas-refs}
+
+%% else use the following coding to input the bibitems directly in the
+%% TeX file.
+
+% \begin{thebibliography}{00}
+
+% %% \bibitem{label}
+% %% Text of bibliographic item
+
+% \bibitem{}
+
+% \end{thebibliography}
+\end{document}
+\endinput
+%%
+%% End of file `elsarticle-template-num.tex'.
