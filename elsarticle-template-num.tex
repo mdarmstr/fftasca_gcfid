@@ -55,7 +55,7 @@
 %% for the whole article with \linenumbers.
 %% \usepackage{lineno}
 
-\journal{Submitted to Chemometrics and Intelligent Laboratory Systems}
+\journal{Journal of Chemometrics}
 
 \begin{document}
 
@@ -115,7 +115,8 @@
             Spain}
 \begin{abstract}
 %% Text of abstract
-Chemical separations data are typically analysed in the time domain using methods that integrate the discrete elution bands. Integrating the same chemical components across several samples must account for retention time drift over the course of an entire experiment as the physical characteristics of the separation are altered through several cycles of use. Failure to consistently integrate the components within a matrix of $M \times N$ samples and variables create artifacts that have a profound effect on the analysis and interpretation of the data. This work presents an alternative where the raw separations data are analysed in the frequency domain to account for the relative offset of each of the chemical components as an experimental matrix of complex Fourier coefficients. The results of an ANOVA-Simultaneous Component Analysis (ASCA) are compared using the peak table, and frequency domain representation of an designed experimental dataset. 
+Chemical separations data are typically analysed in the time domain using methods that integrate the discrete elution bands. Integrating the same chemical components across several samples must account for retention time drift over the course of an entire experiment as the physical characteristics of the separation are altered through several cycles of use. Failure to consistently integrate the components within a matrix of $M \times N$ samples and variables create artifacts that have a profound effect on the analysis and interpretation of the data. This work presents an alternative where the raw separations data are analysed in the frequency domain to account for the relative offset of each of the chemical components as an experimental matrix of complex Fourier coefficients. We present a generalization of the permutation testing, and visualization steps in ANOVA-Simultaneous Component Analysis (ASCA) to handle complex matrices, and use this method to analyze a synthetic dataset with known significant factors and compare the interpretation of a real dataset via its peak table and frequency domain representations.
+
 \end{abstract}
 
 %%Graphical abstract
@@ -125,7 +126,7 @@ Chemical separations data are typically analysed in the time domain using method
 
 %%Research highlights
 \begin{highlights}
-\item Raw GC-FID from a designed experimental dataset is analysed using ANOVA-Simultaneous Component Analysis (ASCA) following pre-processing using a Fast Fourier Transform (FFT).
+\item Raw GC-FID signal from a designed experimental dataset is treated with a Fast Fourier Transform (FFT) and analysed using a generalization of ANOVA-Simultaneous Component Analysis (ASCA) to handle complex data.
 \item The results of the FFT-ASCA analysis are largely consistent with the analysis using the peak table data. This is confirmed using a demonstration with synthetic data.
 \end{highlights}
 
@@ -143,11 +144,11 @@ ANOVA \sep ASCA \sep chromatographic data
 \section{Introduction}
 \label{sec:sample1}
 \subsection{Challenges with peak table analysis}
-Chromatographic separations enable detailed chemical analyses of complex mixtures, providing valuable information for complex research questions. For a multivariate analysis, several samples are collected and discrete chemical bands are integrated within time intervals whose apices are recorded as ``retention times'' - a descriptor of a chemical feature based on the elapsed time between injection and detection of the compound. This is typically done separately for each sample, and even when considered separately some issues arise when the signal for each chemical feature is close to the baseline noise, or convolved with other closely-eluting chemical features. Within the multivariate context these challenges do become more significant since a faithful representation of the chemical information must account for the fact that the same chemical features may drift between analytical runs, a phenomenon often referred to as ``peak drift''~\cite{christensen2005chromatographic}. Failure to integrate the same chemical features, or chromatographic peaks in the same column in an $M \times N$ matrix of experimental information (i.e., the ``peak table'') introduces artifacts that affect the resulting inferences from the the analysis, since a peak may be falsely indicated as being distinct from similar chemical features in other samples (a false negative), or incorrectly associated with a chemical feature it is actually different from (similar to a false positive). In the former case, either zeros are introduced to an $n \in \{1...N\}$ column which is easy to notice from an inspection of the data, or possibly summed together with an unrelated feature which is much harder to identify. Both instances break the assumption of bilinearity within the context of a multivariate analysis, since these artifacts make covariance of the data poorly representative of the actual chemical phenomena being investigated \cite{armstrong2023parafac2}.
+Chromatographic separations enable detailed analyses of chemical mixtures, providing valuable information for researchers interrogating complex systems. For a multivariate analysis, several samples are collected and discrete chemical bands are integrated within time intervals whose apices are recorded as ``retention times'' - a descriptor of a chemical feature based on the elapsed time between injection and detection of the compound. This is typically done separately for each sample, and issues arise when the signal for each chemical feature is close to the baseline noise, or convolved with other closely-eluting chemical features. Within the multivariate context these challenges do become more significant since a faithful representation of the chemical information must account for the fact that the same chemical features may drift between analytical runs, a phenomenon often referred to as ``peak drift''~\cite{christensen2005chromatographic}. Failure to integrate the same chemical features, or chromatographic peaks in the same column in an $M \times N$ matrix of experimental information (i.e., the ``peak table'') introduces artifacts that affect the resulting inferences from the the analysis, since a peak may be falsely indicated as being distinct from similar chemical features in other samples (a false negative), or incorrectly associated with a chemical feature it is actually different from (similar to a false positive). In the former case, either zeros are introduced to an $n \in \{1...N\}$ column which is easy to notice from an inspection of the data, or possibly summed together with an unrelated feature which is much harder to identify. Both instances break the assumption of bilinearity within the context of a multivariate analysis, since these artifacts make covariance of the data poorly representative of the actual chemical phenomena being investigated \cite{armstrong2023parafac2}.
 
-Although retention information alone is often used to integrate univariate chromatographic separations data samples, such as those from Gas Chromatography - Flame Induction Detection (GC-FID) experiments, hyphenated methods that connect a multivariate detector in sequence to separation step are often used to improve the identification of each chemical component. This information can not only be used to assist in the interpretation of the data, but also for the alignment of the data, because the detector itself is intrinsically aligned through mass calibration in the case of a mass spectrometer and can be assumed not to vary significantly over the course of an experiment. While the raw data itself is multivariate, the chemical factors themselves still suffer from their tendency to drift and sophisticated methods for integration are still necessary to summarize the information as a peak table. Extensive research has been done into this type of data, owing to the popularity of High Performance Liquid Chromatography - Mass Spectrometry (LC-MS) data for the chemical analysis of bio-fluids in the Omics field. For Gas Chromatography - Mass Spectrometry (GC-MS) data, an elegant approach for analysis can be performed using PARAFAC2 \cite{kiers1999parafac2}, which includes a relaxed constraint for trilinearity across $M \times J \times N$ acquisitions (i.e., measurements (retention times)), mass-to-charge ratios (m/z) and samples (later: replicates in the final peak table) respectively. But even using PARAFAC2 and related methods for linear/multi-linear decompositions cannot completely escape the need for pragmatic pre-processing strategies, since prior to analysis regions of interest (ROIs) and their associated component numbers must also be selected \cite{baccolo2021untargeted,giebelhaus2022untargeted}.
+Although retention information alone is often used to integrate univariate chromatographic separations data samples, such as those from Gas Chromatography - Flame Induction Detection (GC-FID) experiments, hyphenated methods that connect a multivariate detector in sequence to separation step are often used to improve the identification of each chemical component. This information can not only be used to assist in the interpretation of the data, but also for the alignment of the data, because the detector itself is intrinsically aligned through mass calibration in the case of a mass spectrometer and can be assumed not to vary significantly over the course of an experiment. While the raw data itself is multivariate, the chemical factors still suffer from their tendency to drift and sophisticated methods for integration are necessary to summarize the information as a peak table. Extensive research has been done into this type of data, owing to the popularity of High Performance Liquid Chromatography - Mass Spectrometry (LC-MS) data for the chemical analysis of bio-fluids in the Omics field. For Gas Chromatography - Mass Spectrometry (GC-MS) data, an elegant approach for analysis can be performed using PARAFAC2 \cite{kiers1999parafac2}, which includes a relaxed constraint for trilinearity across $M \times J \times N$ acquisitions (i.e., measurements (retention times)), mass-to-charge ratios (m/z) and samples (later: replicates in the final peak table) respectively. PARAFAC2 cannot handle all problems with the analysis of hyphenated chromatographic data in one step however; prior to analysis, regions of interest (ROIs) and their associated component numbers must also be selected \cite{baccolo2021untargeted,giebelhaus2022untargeted}.
 
-So as not to bias the analysis, strategies for the integration of chromatographic data (or ``pre-processing'' as it is commonly called), must be as unsupervised as possible. But any representation of the data whose ``true'' characteristics are not known \textit{a-priori}, can only be compared with its competitors, and not against a set of facts regarding the data\cite{weggler2021unique}.
+Comparing strategies for the integration of chromatographic data (or ``pre-processing'' as it is commonly called), shows that the methodology used to extract the chemical features can drastically affect the results of a multivariate analysis\cite{weggler2021unique}. And the best method is difficult to select for any problem when ``ground truth'' is unknown, as is common for all unsupervised learning.
 
 %Any strategy introduces a degree of bias to the analysis, as 
 %There also presents a problem where methods for comparing strategies can only be compared with one another, rather than against known facts about the data~.
@@ -155,7 +156,7 @@ So as not to bias the analysis, strategies for the integration of chromatographi
 %This limits the scope of the current study to one set of parameters for the peak table analysis, although a method for accounting for missing data is incorporated into the significance testing step of the different factors to reveal the best possible analysis of the peak table data as it has been presented to the research community.
 
 
-This work suggests that an abstraction of the raw chromatographic data through a frequency domain representation can be used to subvert many common issues with chromatographic data analysis. This is done using the Fast Fourier Transform (FFT) on each sample within a designed experimental dataset collected using a Gas Chromatography Flame-Induction Detector (GC-FID) system followed by subsequent Analysis of Variance (ANOVA) - Simultaneous Component Analysis (ASCA)~\cite{smilde2005anova} that has been generalized to account for complex matrices. This technique recovers similar information to the more traditional peak table representation of the data, as provided by the authors of the original study, but requires an extra step to recover informative representations of the data in the time domain for the sake of interpreting the results. This is a simpler implementation of a method for analysis that is becoming widespread as an intermediate step in many popular algorithms ~\cite{schneide2023shift,schneide2024shift,yu2023parasias}.
+This work suggests that an abstraction of the raw chromatographic data through a frequency domain representation can be used to subvert many common issues with chromatographic data analysis. This is done using the Fast Fourier Transform (FFT) on each sample within a designed experimental dataset collected using a Gas Chromatography Flame-Induction Detector (GC-FID) system followed by subsequent Analysis of Variance (ANOVA) - Simultaneous Component Analysis (ASCA)~\cite{smilde2005anova} that has been generalized to account for complex matrices. This technique recovers similar information to the more traditional peak table representation of the data, as provided by the authors of the original study, but requires an extra step to recover informative representations of the data in the time domain for the sake of interpreting the results. This is a simpler implementation of a method for analysis that is becoming widespread as an intermediate step in many popular algorithms ~\cite{schneide2023shift,schneide2024shift,yu2023parasias} that handle similar problems.
 
 % Herein, an abstraction of the raw chromatographic data in the frequency domain is analysed using Analysis of Variance (ANOVA) - Simultaneous Component Analysis (ASCA)~\cite{smilde2005anova} via the Fast Fourier Transform (FFT). This technique is used as an intermediate to solving problems with peak drift~\cite{schneide2023shift,schneide2024shift,yu2023parasias}, but this method analyses the frequency representation directly, and based on the factorization of the different experimental factors the data is interpreted through an inverse transform \textit{post-hoc}.
 
@@ -238,10 +239,10 @@ Significance testing follows as normally, but the complex characteristics of the
 
 \begin{align}
     \mathbf{X}_k = \mathbf{X}_m\mathbf{F}\\
-    \mathbf{X}_m = \mathbf{F}^{-1}\mathbf{X}_k\\
+    \mathbf{X}_m = \mathbf{X}_k\mathbf{F}^{-1}\\
     \mathbf{X}_k = \mathbf{T}\mathbf{P}^H + \mathbf{E}\\
-    \mathbf{X}_m = \mathbf{F}^{-1}\left(\mathbf{T}\mathbf{P}^H + \mathbf{E}\right)\\
-    \mathbf{X}_m = \mathbf{T}\left(\mathbf{F}^{-1}\mathbf{P}^H\right) + \mathbf{F}^{-1}\mathbf{E}
+    \mathbf{X}_m = \left(\mathbf{T}\mathbf{P}^H + \mathbf{E}\right)\mathbf{F}^{-1}\\
+    \mathbf{X}_m = \mathbf{T}\left(\mathbf{P}^H\mathbf{F}^{-1}\right) + \mathbf{E}\mathbf{F}^{-1}
 \end{align}
 
 And so the transform of the loadings from the frequency domain encompass similar variance as a function of the linear transformation $\mathbf{F}$, and can be interpreted following the inverse transform. Additionally, the reconstructions of $\mathbf{X}$ according to the different experimental factors may be transformed back to the time domain for an inspection of the different peaks responsible for affecting the level separations.
@@ -304,18 +305,25 @@ From Equation \ref{eq:asca} the following \textit{post-hoc} visualizations of th
     
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/peak_loads_time.eps}
+        \includegraphics[width=\textwidth]{figures/freq_loads_time_real.eps}
         \caption{Loadings for factor "Time" from the peak table representation of the data. 26 targeted metabolites were included in the analysis.}
         \label{fig:figure3}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/freq_loads_time.eps}
+        \includegraphics[width=\textwidth]{figures/freq_loads_time_imag.eps}
         \caption{Complex-valued loadings in the frequency domain for factor ``Time''.}
         \label{fig:figure4}
     \end{subfigure}
     \vfill
+
+\begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/peak_loads_time.eps}
+        \caption{Real-valued loadings in the time domain for factor ``Time''.}
+        \label{fig:figure5}
+    \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
@@ -325,7 +333,6 @@ From Equation \ref{eq:asca} the following \textit{post-hoc} visualizations of th
     \end{subfigure}
     \caption{ASCA results for the peak table analysis, as well as the frequency-domain analysis. The real-valued scores in the frequency domain are more consistent, but the loadings themselves are less interpretable. They can however be transformed back into the time domain.}
     \label{fig:subfigures}
-    
 \end{figure}
 
 In addition to analyzing the loadings, the individual factor matrices themselves can be transformed back into the time domain for  inspection. This type of analysis shows that the GLM performed on the frequency domain, as an abstraction of the original, raw data still corresponds to real-valued chemical components. An example is shown in Figure \ref{fig:freq_treat}, where a single chemical factor with evidence of statistical significance in the frequency domain, is clearly differentiated according to its levels in the time domain.
