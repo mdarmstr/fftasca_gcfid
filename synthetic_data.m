@@ -1,3 +1,5 @@
+close all;
+
 reps = 4;
 vars = 5;
 levels = {[1,2,3,4],[1,2,3]};
@@ -67,13 +69,25 @@ for jitterLevel = 1:length(jitterLevels)
     % Plot the chromatographic data with jitter for this level
     figure;
     hold on;
-    for i = 1:size(dataMatrix, 1)
-        plot(syntheticChromData(i,1:100));
+    for i = 1:3
+        plot(syntheticChromData(i,1:2000)');
     end
+    
     title(['Synethetic Data with Jitter Level ' num2str(jitterLevel)]);
     xlabel('Acquisitions');
     ylabel('Intensity');
     hold off;
+
+    ax_h = get(gcf,'Children');
+
+    for i = 1:length(ax_h)
+        if strcmp(get(ax_h(i), 'type'), 'axes')
+            set(ax_h(i), 'FontSize', 14);
+            val = i;
+        end
+    end
+
+    exportgraphics(gcf,strcat("figures/jitter_illustration",sprintf('%d',jitterLevel),".pdf"),'ContentType','vector')
 
     [~,parglmot] = parglm(syntheticChromData,F,'Model',{[1,2]},'Preprocessing',1);
     p_time(jitterLevel) = parglmot.p(1);
