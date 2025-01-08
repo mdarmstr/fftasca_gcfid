@@ -223,7 +223,7 @@ For complex-valued data, the real-valued sum of squares are calculated through t
 
 \noindent where $\mathbf{X}^H_A$ is the \textit{Hermitian} (i.e. conjugate transpose) of $\mathbf{X}_A$ and must be explicitly calculated to ensure that a real-valued scalar is returned. Proof of this identity is widely known and can be derived by taking the matrix product of any complex data and its complex conjugate.
 
-In this case, for a series of time-series data representing $M$ chromatographic samples, each $x_n$ vector is indexed row-wise (i.e. the total number of acquisitions per sample) and each are transformed into the frequency domain via Equation \ref{eq:fft}. An ASCA analysis is then performed on the matrix of the complex coefficients - where statistical significance testing is performed on the magnitude of combined real and imaginary parts of each of the $N$ coefficients according to Figure \ref{fig:imag}, and Equation \ref{eq:ssq}.
+In this case, for a series of time-series data representing $M$ chromatographic samples, each $x_n$ vector is indexed row-wise (i.e. the total number of acquisitions per sample) and each are transformed into the frequency domain via Equation \ref{eq:fft}. An ASCA analysis is then performed on the matrix of the complex coefficients - where statistical significance testing is performed on the magnitude of the combined real and imaginary parts of each of the $N$ coefficients according to Figure \ref{fig:imag}, and Equation \ref{eq:ssq}.
 
 \begin{figure}[tbh!]
 \centering
