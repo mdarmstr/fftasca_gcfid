@@ -160,7 +160,8 @@ end
 for interaction = 1 : ascao.n_interactions
     
     xf = ascao.interactions{interaction}.matrix;
-    for factor = 1 : ascao.interactions{1}.factors
+
+    for factor = ascao.interactions{interaction}.factors
         xf = xf + ascao.factors{factor}.matrix;
     end
     [p,~,mdl] = pca_pp(xf,'Pcs',1:rank(xf));
