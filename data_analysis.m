@@ -99,8 +99,9 @@ Y_raw_nb = Y_raw(~blk_idx,:);
 Fs = 200;  % Sampling frequency                    
 tp = 1/Fs; % Sampling period       
 L = 45001; % Length of signal
+freq = (-floor(L/2):ceil(L/2)-1) * (Fs/L); % frequencies
 
-% Reconstruction prealloc
+% Reconstruction alloc
 X_recon = zeros(size(X_raw,1), size(X_raw,2));
 
 % Split the Frequency spectrum in half
@@ -114,7 +115,7 @@ line_map = hsv2rgb(interpolateColors(red,tel,size(X_fft,1)));
 % Plotting power spectrum
 hold on;
 for ii = 1:size(X_fft,1)
-    plot(Fs/L*(-L/2:L/2-1), abs(fftshift(X_fft(ii,:)))+ii,'Color',[line_map(ii,:),0.6]);
+    plot(freq, abs(fftshift(X_fft(ii,:)))+ii,'Color',[line_map(ii,:),0.6]);
 end
 
 hold off;
@@ -230,10 +231,10 @@ title('Peak table loadings, Factor Time')
 xlabel('Position')
 exportgraphics(gcf, fullfile('figures', ['peak_loads_time', '.pdf']));
 
-plot_complex_loadings(real(time_loads_total), 'Real frequency loadings, Time', Fs/L*(-L/2:L/2-1));
+plot_complex_loadings(real(time_loads_total), 'Real frequency loadings, Time', freq);
 exportgraphics(gcf, fullfile('figures', ['freq_loads_time_real', '.pdf']));
 
-plot_complex_loadings(imag(time_loads_total), 'Imag Frequency loadings, Time', Fs/L*(-L/2:L/2-1));
+plot_complex_loadings(imag(time_loads_total), 'Imag Frequency loadings, Time', freq);
 exportgraphics(gcf, fullfile('figures', ['freq_loads_time_imag', '.pdf']));
 
 time_peaks = real(ifft(fftshift(time_loads_total)));

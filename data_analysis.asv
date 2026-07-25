@@ -153,9 +153,9 @@ figure;
 hold on;
 
 % Plot a single representative line for each class for the legend
-h1 = plot(real(X_treat(class1_indices(1), 13888:14512)), 'b', 'DisplayName', 'Healthy');
-h2 = plot(real(X_treat(class2_indices(1), 13888:14512)), 'r', 'DisplayName', 'Primed');
-h3 = plot(real(X_treat(class3_indices(1), 13888:14512)), 'k', 'DisplayName', 'Wounded');
+h1 = plot(real(X_treat(class1_indices(1), 13888:14512)), 'b', 'DisplayName', 'Healthy', 'LineWidth',2);
+h2 = plot(real(X_treat(class2_indices(1), 13888:14512)), 'r', 'DisplayName', 'Primed', 'LineWidth',2);
+h3 = plot(real(X_treat(class3_indices(1), 13888:14512)), 'k', 'DisplayName', 'Wounded', 'LineWidth',2);
 
 
 % Plot class 1 in blue
@@ -230,10 +230,10 @@ title('Peak table loadings, Factor Time')
 xlabel('Position')
 exportgraphics(gcf, fullfile('figures', ['peak_loads_time', '.pdf']));
 
-plot_complex_loadings(real(time_loads_total), 'Real frequency loadings, Time', Fs/L*(-L/2:L/2-1));
+plot_complex_loadings(real(time_loads_total), 'Real frequency loadings, Time', freq);
 exportgraphics(gcf, fullfile('figures', ['freq_loads_time_real', '.pdf']));
 
-plot_complex_loadings(imag(time_loads_total), 'Imag Frequency loadings, Time', Fs/L*(-L/2:L/2-1));
+plot_complex_loadings(imag(time_loads_total), 'Imag Frequency loadings, Time', freq);
 exportgraphics(gcf, fullfile('figures', ['freq_loads_time_imag', '.pdf']));
 
 time_peaks = real(ifft(fftshift(time_loads_total)));
