@@ -47,6 +47,8 @@ ylabel('PC1','Color',blk);
 title('Factor - Time','Color',blk);
 box off;
 legend('24h','72h')
+% Set all text in the current figure to 14 pt
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['peak_time', '.pdf']), 'BackgroundColor', 'none');
 
 %Plot factor time
@@ -58,6 +60,7 @@ ylabel('PC2 Scores','Color',blk);
 title('Factor - Treatment','Color',blk);
 box off;
 legend('Healthy','Primed','Wounded')
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['peak_treat', '.pdf']), 'BackgroundColor', 'none');
 close all;
 
@@ -124,6 +127,7 @@ xlabel('f(Hz)','Color',blk);
 ylabel('Amplitude','Color',blk);
 title('Frequency Domain Representation','Color',blk);
 box off;
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['freq_rep', '.pdf']), 'BackgroundColor', 'white');
 close all;
 
@@ -136,6 +140,7 @@ xlabel('Acquisitions','Color',blk);
 ylabel('Signal Amplitude','Color',blk);
 title('Time Domain Representation','Color',blk);
 box off;
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['time_rep', '.pdf']), 'BackgroundColor', 'white');
 close all;
 
@@ -183,13 +188,13 @@ ax_h = get(gcf,'Children');
 
  for i = 1:length(ax_h)
     if strcmp(get(ax_h(i), 'type'), 'axes')
-        set(ax_h(i), 'FontSize', 14);
+        set(ax_h(i), 'FontSize', 24);
         val = i;
     end
 end
 
 hold off;
-
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['time_treat', '.pdf']), 'BackgroundColor', 'none');
 close all;
 
@@ -213,6 +218,7 @@ ylabel('PC1','Color',blk);
 title('Factor Time, Frequency','Color',blk);
 box off;
 legend('24h','72h')
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['freq_time_mn', '.pdf']), 'BackgroundColor', 'none');
 close all;
 
@@ -229,12 +235,16 @@ pks_tbl = ascao_peaks.factors{1}.loads;
 plot_vec(pks_tbl);
 title('Peak table loadings, Factor Time')
 xlabel('Position')
+ylabel('Value')
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['peak_loads_time', '.pdf']));
 
 plot_complex_loadings(real(time_loads_total), 'Real frequency loadings, Time', freq);
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['freq_loads_time_real', '.pdf']));
 
 plot_complex_loadings(imag(time_loads_total), 'Imag Frequency loadings, Time', freq);
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['freq_loads_time_imag', '.pdf']));
 
 time_peaks = real(ifft(fftshift(time_loads_total)));
@@ -242,16 +252,7 @@ plot(time_peaks,'LineWidth',2)
 xlabel('Acquisitions')
 ylabel('Normalized amplitude')
 title('Inverse loadings - Time')
-
-ax_h = get(gcf,'Children');
-
-for i = 1:length(ax_h)
-    if strcmp(get(ax_h(i), 'type'), 'axes')
-        set(ax_h(i), 'FontSize', 14);
-        val = i;
-    end
-end
-
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['time_peaks', '.pdf']));
 
 no_clrs = length(unique(Y_raw_nb(:,2)));
@@ -262,7 +263,7 @@ ylabel('PC2 Scores','Color',blk);
 title('Factor Treatment, Autoscaled','Color',blk);
 box off;
 legend('Healthy','Primed','Wounded')
-
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['freq_treat_mn', '.pdf']), 'BackgroundColor', 'none');
 close all;
 
@@ -288,6 +289,7 @@ ylabel('PC1','Color',blk);
 title('Factor Time, AS','Color',blk);
 box off;
 legend('24h','72h')
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['freq_time_auto', '.pdf']), 'BackgroundColor', 'none');
 
 no_clrs = length(unique(Y_raw_nb(:,2)));
@@ -298,6 +300,7 @@ ylabel('PC2 Scores','Color',blk);
 title('Factor Treatment, SNV','Color',blk);
 box off;
 legend('Healthy','Primed','Wounded')
+set(findall(gcf, 'Type', 'axes'), 'FontSize', 24);
 exportgraphics(gcf, fullfile('figures', ['freq_treat_auto', '.pdf']), 'BackgroundColor', 'none');
 close all;
 
@@ -317,7 +320,7 @@ ax_h = get(gcf,'Children');
 
 for i = 1:length(ax_h)
     if strcmp(get(ax_h(i), 'type'), 'axes')
-        set(ax_h(i), 'FontSize', 14);
+        set(ax_h(i), 'FontSize', 24);
     end
 end
 
